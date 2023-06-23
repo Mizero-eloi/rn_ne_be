@@ -7,7 +7,6 @@ import {
   successResponse,
 } from "../utils/api.response.js";
 import _ from "lodash";
-import { VoteCandidate } from "../models/VoteCandidate.model.js";
 
 export const registerUser = async (req, res) => {
   try {
@@ -82,29 +81,6 @@ export const login = async (req, res) => {
     const token = user.generateAuthToken();
 
     return successResponse("Login successful!", { access_token: token }, res);
-  } catch (ex) {
-    return serverErrorResponse(ex, res);
-  }
-};
-
-export const getProfile = async (req, res) => {
-  try {
-    let user = await User.findById(req.user._id);
-    if (!user) return errorResponse("User not found!", res);
-
-    return successResponse("Profile", user, res);
-  } catch (ex) {
-    return serverErrorResponse(ex, res);
-  }
-};
-
-export const checkIfUserVoted = async (req, res) => {
-  try {
-    const { _id } = req.user;
-    let checkIfUserVoted = await VoteCandidate.findOne({ voter: _id });
-    if (!checkIfUserVoted)
-      return successResponse("Has user voted?", { voted: false }, res);
-    return successResponse("Has user voted?", { voted: true }, res);
   } catch (ex) {
     return serverErrorResponse(ex, res);
   }
